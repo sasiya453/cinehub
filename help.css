@@ -1,0 +1,130 @@
+@font-face {
+  font-family: 'TimesTen';
+  src: url('image/TimesTenBold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'TimesTen', sans-serif;
+  background: url("image/1.png") no-repeat center center fixed;
+  background-size: cover;
+  color: #fff;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: -1;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: rgba(30, 30, 30, 0.8);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 20px rgba(255, 0, 64, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.back-btn {
+  text-decoration: none;
+  color: #fff;
+  background-color: #ff0040;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background-color: #d10038;
+}
+
+.help-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 100px);
+  padding: 20px;
+}
+
+.help-card {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border-radius: 25px;
+  padding: 60px 30px 40px;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+}
+
+.image-box {
+  width: 200px;
+  height: 130px;
+  margin: 0 auto;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+  margin-bottom: 25px;
+}
+
+
+.image-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+.help-card h2 {
+  font-size: 20px;
+  margin-top: 60px;
+  margin-bottom: 20px;
+  color: #ffe600;
+}
+
+.help-card .description {
+  font-size: 14px;
+  color: #ccc;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.join-btn {
+  display: inline-block;
+  text-decoration: none;
+  background-color: #ffcc00;
+  color: #000;
+  padding: 10px 25px;
+  border-radius: 25px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.join-btn:hover {
+  opacity: 0.8;
+}

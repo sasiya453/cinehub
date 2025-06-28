@@ -1,0 +1,171 @@
+@font-face {
+  font-family: 'Poppins';
+  src: url('image/TimesTenBold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: url("image/bg.jpg") no-repeat center center fixed;
+  background-size: cover;
+  color: #fff;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: -1;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: rgba(30, 30, 30, 0.8);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 20px rgba(255, 0, 64, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.back-btn {
+  text-decoration: none;
+  color: #fff;
+  background-color: #ff0040;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background-color: #d10038;
+}
+
+.main-container {
+  display: flex;
+  height: 100vh;
+  position: relative;
+  overflow-y: auto;
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.section {
+  width: 50%;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+.section h2 {
+  font-size: 30px;
+  color: #ffcc00;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ff0040;
+  padding-bottom: 10px;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.item {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  animation: slideUp 1s ease-out forwards;
+  opacity: 0;
+}
+
+.item:nth-child(2) { animation-delay: 0.2s; }
+.item:nth-child(3) { animation-delay: 0.4s; }
+
+.item h3 {
+  font-size: 20px;
+  color: #fff;
+}
+
+.size {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.actions {
+  margin-top: 10px;
+}
+
+.actions a {
+  text-decoration: none;
+  padding: 8px 15px;
+  border-radius: 15px;
+  margin-right: 10px;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.download {
+  background-color: #efbf04;
+  color: #000;
+}
+
+.trailer {
+  background-color: transparent;
+  border: 2px solid #fff;
+  color: #fff;
+}
+
+.download:hover,
+.trailer:hover {
+  opacity: 0.7;
+}
+
+.divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background-color: #ff004066;
+  z-index: 1;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+  .section {
+    width: 100%;
+  }
+  .divider {
+    display: none;
+  }
+}
+
