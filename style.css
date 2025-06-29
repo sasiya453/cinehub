@@ -417,19 +417,90 @@ header h1 {
   }
 }
 
+.glass-footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding: 18px 0;
+  color: #fff; /* White text for contrast */
+  font-weight: 500;
+  font-size: 15px;
+  /* Blurring the background content */
+  backdrop-filter: blur(15px) saturate(180%);
+  /* Red and White Mixed Glass Background */
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.2), /* Tomato Red with transparency */
+    rgba(57, 7, 7, 0.861) /* White with transparency */
+  );
+  /* No borders */
+  border: none;
+  /* Enhanced Shadow for a more prominent glass look */
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  overflow: hidden; /* Important for the glow effect */
+  transition: all 0.3s ease-in-out; /* Smooth transitions for properties */
+}
+
+/* Pseudo-element for the glowing effect */
+.glass-footer::before {
+  content: '';
+  position: absolute;
+  top: 50%; /* Start glow from center */
+  left: 50%; /* Start glow from center */
+  width: 0;
+  height: 0;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.6), /* Bright white glow center */
+    rgba(255, 99, 71, 0.4), /* Reddish glow outer */
+    transparent 70%
+  );
+  border-radius: 50%;
+  transform: translate(-50%, -50%); /* Center the glow */
+  opacity: 0; /* Hidden by default */
+  pointer-events: none; /* Allows clicks/interactions on content below */
+  transition: all 0.4s ease-out; /* Smooth glow transition */
+}
+
+/* Glow effect on hover */
+.glass-footer:hover::before {
+  width: 300px; /* Adjust glow size as needed */
+  height: 300px; /* Adjust glow size as needed */
+  opacity: 1;
+}
+
+/* Optional: Subtle text shadow for better readability on glass */
+.glass-footer p {
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.glass-footer {
+  /* ... existing styles ... */
+
+  opacity: 10; /* Change this value between 0 (fully transparent) and 1 (fully opaque) */
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 /* Preloader container */
 #preloader {
   position: fixed;
   z-index: 9999;
   background-color: #000;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   gap: 20px;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  overflow: hidden;
   transition: opacity 0.5s ease;
 }
 
@@ -531,9 +602,5 @@ header h1 {
   100% { stroke-dashoffset: 275; }
 }
 
-html, body {
-  overflow-x: hidden;
-  overflow-y: auto;
-}
 
 
