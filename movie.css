@@ -135,15 +135,6 @@ header {
   opacity: 0.7;
 }
 
-.divider {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 2px;
-  background-color: #ff004066;
-  z-index: 1;
-}
 
 /* Animations */
 @keyframes fadeIn {
@@ -167,5 +158,88 @@ header {
   .divider {
     display: none;
   }
+}
+
+/* Tab Bar with Blur Effect */
+.tab-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 16px;
+  width: 100%;
+  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
+  height: 50px; /* thin row */
+}
+
+
+.tab-title {
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Buttons Container */
+.tab-buttons {
+  position: relative;
+  display: flex;
+  gap: px;
+  align-items: center;
+}
+
+/* Buttons */
+.tab-btn {
+  padding: 8px 14px;
+  font-size: 14px;
+  border: none;
+  background: none;
+  color: white;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s;
+}
+
+.tab-btn.active {
+  color: #ff0040;
+}
+
+/* Underline */
+.tab-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 50%;
+  background-color: red;
+  transition: left 0.3s ease;
+}
+
+/* Tab Content */
+.tab-content {
+  margin-top: 10px;
+}
+
+/* Optional: Style scrollbars off mobile */
+body {
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("image/bg.jpg") no-repeat center center fixed;
+  background-size: cover;
+  filter: blur(8px);
+  z-index: -2;
+}
+
+body {
+  position: relative;
+  z-index: 1;
+  background: none !important; /* prevent double image */
 }
 
