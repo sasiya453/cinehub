@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Class Recordings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script defer src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  <style>
+    :root{
+      --bg:#355C7D;      /* deep navy */
+      --ink:#EAEAF0;     /* light text */
+      --muted:#BFC6D3;   
+      --surface:#725A7A; /* purple */
+      --surface-2:#C56C86; /* muted pink */
+      --accent:#FF7582;  /* coral */
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+      --radius:20px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);}
+
+    /* Header */
+    header{position:sticky;top:0;z-index:50;background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,0));}
+    .nav{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .brand{font-weight:700;letter-spacing:.3px;display:flex;align-items:center;gap:10px}
+    .brand .logo{width:36px;height:36px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(135deg,var(--surface),var(--accent));box-shadow:var(--shadow)}
+    .spacer{flex:1}
+    .nav a, .nav button{appearance:none;border:0;background:transparent;color:var(--ink);font-weight:600;padding:10px 14px;border-radius:12px;cursor:pointer}
+    .nav a:hover, .nav button:hover{background:rgba(255,255,255,.08)}
+    .btn-primary{background:var(--accent);color:#1B1B1B}
+    .btn-primary:hover{filter:brightness(.95)}
+
+    main{max-width:1100px;margin:0 auto;padding:24px}
+
+    /* Hero */
+    .hero{display:grid;gap:18px;place-items:center;text-align:center;padding:40px 10px}
+    .hero h1{margin:0;font-size:clamp(26px,4vw,40px)}
+    .hero p{margin:0;color:var(--muted)}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+
+    /* Cards & grids */
+    .grid{display:grid;gap:16px}
+    @media(min-width:720px){.grid{grid-template-columns:repeat(3,1fr)}}
+    .card{background:linear-gradient(180deg,var(--surface),var(--surface-2));border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);transition:.2s transform, .2s box-shadow}
+    .card:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.35)}
+    .card h3{margin:6px 0 8px}
+    .pill{display:inline-flex;align-items:center;gap:8px;background:rgba(0,0,0,.22);padding:6px 10px;border-radius:999px;font-size:12px}
+
+    /* Section titles */
+    .section-title{display:flex;align-items:center;gap:10px;margin:10px 0 14px}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 6px rgba(255,117,130,.15)}
+
+    /* Modals */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;padding:18px;z-index:100}
+    .modal.open{display:flex}
+    .modal-panel{width:min(720px,100%);background:linear-gradient(180deg,var(--surface),var(--surface-2));border-radius:22px;box-shadow:var(--shadow);padding:20px}
+    .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .x{cursor:pointer;border:0;background:transparent;color:var(--ink);font-size:22px;line-height:1}
+
+    /* Inputs */
+    .field{display:grid;gap:6px;margin:10px 0}
+    .label{font-weight:600}
+    select,input[type="text"]{width:100%;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.15);color:var(--ink)}
+
+    /* Lists */
+    .list{display:grid;gap:12px}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.1);padding:14px;border-radius:16px}
+    .row:hover{background:rgba(0,0,0,.24)}
+
+    /* Video layout */
+    .video{position:relative;border-radius:18px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:16/9;background:#000}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+    .btn{appearance:none;border:0;padding:10px 14px;border-radius:14px;font-weight:700;cursor:pointer}
+    .btn.secondary{background:rgba(0,0,0,.25);color:var(--ink)}
+    .btn.link{background:var(--accent);color:#1b1b1b}
+    .btn[disabled]{opacity:.55;cursor:not-allowed}
+
+    footer{max-width:1100px;margin:30px auto 60px;color:var(--muted);padding:0 24px}
+
+    /* Utility */
+    .hide{display:none !important}
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav">
+      <div class="brand"><span class="logo">📚</span><span>Class Recordings</span></div>
+      <div class="spacer"></div>
+      <a href="#/">Home</a>
+      <a href="#/view-lessons">View Lessons</a>
+      <button id="openSearch">Search 🔍</button>
+      <a href="#/about">About</a>
+      <a href="#/support">Support</a>
+      <a href="#/contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="route-home" class="route">
+      <div class="hero">
+        <h1>Access Your Class Recordings Anytime</h1>
+        <p>Maths & Chemistry – lessons, parts, and resources in one place.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="#/view-lessons">View Lessons</a>
+          <button class="btn secondary" id="openSearch2">Search</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title"><span class="dot"></span><h2>Quick Start</h2></div>
+        <div class="grid" id="homeQuick"></div>
+      </div>
+    </section>
+
+    <section id="route-view" class="route hide">
+      <div class="section-title"><span class="dot"></span><h2>Browse Lessons</h2></div>
+      <div id="viewStage-select" class="list"></div>
+      <div id="viewStage-lessons" class="list hide"></div>
+      <div id="viewStage-parts" class="list hide"></div>
+    </section>
+
+    <section id="route-lesson" class="route hide">
+      <div id="lessonContainer"></div>
+    </section>
+
+    <section id="route-generic" class="route hide">
+      <div class="section-title"><span class="dot"></span><h2 id="genericTitle">Page</h2></div>
+      <div class="card"><p>This is a placeholder page. You can rename and edit its content later.</p></div>
+    </section>
+  </main>
+
+  <footer>© <span id="year"></span> Class Recordings. All rights reserved.</footer>
+
+  <!-- Search Modal -->
+  <div class="modal" id="searchModal" aria-hidden="true" role="dialog">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h3>Search Lessons</h3>
+        <button class="x" id="closeSearch" aria-label="Close">×</button>
+      </div>
+      <div class="field">
+        <label class="label" for="searchSubject">Subject</label>
+        <select id="searchSubject"><option value="All">All</option></select>
+      </div>
+      <div class="field">
+        <label class="label" for="searchInput">Keyword</label>
+        <input type="text" id="searchInput" placeholder="Search lessons or parts…" />
+      </div>
+      <div class="section-title"><span class="dot"></span><h4>Results</h4></div>
+      <div id="searchResults" class="list"></div>
+    </div>
+  </div>
+
+  <!-- Subject Picker Modal (for View Lessons first step) -->
+  <div class="modal" id="subjectModal" aria-hidden="true" role="dialog">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h3>Select Subject</h3>
+        <button class="x" id="closeSubject" aria-label="Close">×</button>
+      </div>
+      <div id="subjectButtons" class="grid" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr));"></div>
+    </div>
+  </div>
+
+  <script>
+  // --- CONFIG (provided by user) ---
+  const GOOGLE_SHEETS_API_KEY = "AIzaSyDzdiDMtiY250DS-lDuZeIZOocw9oqMlhM";
+  const SPREADSHEET_ID = "1BqidQQTNj5NF4dAMX-0SrVlIcJbRKMMLow5CAFyH7pg";
+  const TAB_NAME = "Lessons"; // one-tab database
+
+  // --- UTILITIES ---
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
+  const debounce = (fn, ms=250) => { let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), ms); } };
+  const slug = s => encodeURIComponent(String(s||'').trim());
+  const uidFor = row => btoa(unescape(encodeURIComponent(`${row.Subject}|${row.Lesson}|${row.PartTitle}`)));
+
+  // --- STATE ---
+  const App = {
+    rows: [],        // all parts rows
+    byId: new Map(), // uid -> row
+    subjects: new Set(),
+    loaded:false,
+    selectedSubject:null,
+    selectedLesson:null
+  };
+
+  // --- DATA LOADING ---
+  async function fetchSheet(){
+    // cache for session
+    const cacheKey = 'cr_sheet_cache_v1';
+    try{
+      const cached = sessionStorage.getItem(cacheKey);
+      if(cached){
+        const {ts, rows} = JSON.parse(cached);
+        if(Date.now()-ts < 1000*60*15){ // 15 min cache
+          return rows;
+        }
+      }
+    }catch{}
+
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(TAB_NAME)}?key=${GOOGLE_SHEETS_API_KEY}`;
+    const res = await fetch(url);
+    if(!res.ok){ throw new Error('Failed to load Google Sheet'); }
+    const json = await res.json();
+    const values = (json.values||[]);
+    if(values.length===0){ return []; }
+    const headers = values[0].map(h=>h.trim());
+    const idx = name => headers.indexOf(name);
+
+    const rows = values.slice(1).map((r,i)=>({
+      row:i+2,
+      Subject: r[idx('Subject')]||'',
+      Lesson: r[idx('Lesson')]||'',
+      PartTitle: r[idx('Part Title')]||r[idx('PartTitle')]||'',
+      Description: r[idx('Description')]||'',
+      YouTube: r[idx('YouTube Embed')]||r[idx('YouTube')]||'',
+      Telegram: r[idx('Telegram Link')]||'',
+      Resource: r[idx('Resource Link')]||'',
+    })).filter(x=>x.Subject||x.Lesson||x.PartTitle);
+
+    try{ sessionStorage.setItem(cacheKey, JSON.stringify({ts:Date.now(), rows})); }catch{}
+    return rows;
+  }
+
+  function indexRows(rows){
+    App.rows = rows;
+    App.byId.clear();
+    App.subjects = new Set(rows.map(r=>r.Subject).filter(Boolean));
+    rows.forEach(r=> App.byId.set(uidFor(r), r));
+  }
+
+  // --- RENDER HELPERS ---
+  function renderHome(){
+    const quick = $('#homeQuick');
+    const sample = Object.entries(groupByLesson(App.rows)).slice(0,6);
+    quick.innerHTML = sample.map(([key,parts])=>{
+      const s = parts[0].Subject || 'General';
+      const lesson = parts[0].Lesson || 'Untitled';
+      return `<div class="card" onclick="location.hash='#/view-lessons?subject=${slug(s)}&lesson=${slug(lesson)}'">
+        <span class="pill">${escapeHtml(s)} • ${parts.length} parts</span>
+        <h3>${escapeHtml(lesson)}</h3>
+        <div>${escapeHtml(parts[0].Description?.slice(0,90)||'')}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderView(){
+    // Always ask for subject first if not set
+    if(!App.selectedSubject){ openSubjectModal(); }
+
+    $('#viewStage-select').classList.add('hide');
+    $('#viewStage-lessons').classList.remove('hide');
+    $('#viewStage-parts').classList.add('hide');
+
+    const lessonsList = $('#viewStage-lessons');
+    const lessons = Object.entries(groupByLesson(App.rows.filter(r=> App.selectedSubject==='All' ? true : r.Subject===App.selectedSubject)));
+
+    lessonsList.innerHTML = lessons.map(([lesson, parts])=>{
+      const s = parts[0].Subject;
+      return `<div class="row">
+        <div>
+          <div class="pill">${escapeHtml(s)}</div>
+          <h3 style="margin:6px 0 0">${escapeHtml(lesson)}</h3>
+          <div style="color:var(--muted)">${parts.length} part(s)</div>
+        </div>
+        <button class="btn btn-primary" onclick="showParts('${encodeURIComponent(lesson)}')">Open</button>
+      </div>`;
+    }).join('');
+  }
+
+  function showParts(lessonName){
+    App.selectedLesson = decodeURIComponent(lessonName);
+    const wrap = $('#viewStage-parts');
+    $('#viewStage-lessons').classList.add('hide');
+    wrap.classList.remove('hide');
+
+    const parts = App.rows.filter(r=> (App.selectedSubject==='All' || r.Subject===App.selectedSubject) && r.Lesson===App.selectedLesson);
+    const sorted = sortParts(parts);
+
+    wrap.innerHTML = `<div class="section-title"><span class='dot'></span><h3>${escapeHtml(App.selectedLesson)}</h3></div>` +
+      sorted.map(p=>{
+        const id = uidFor(p);
+        return `<div class="card" onclick="location.hash='#/lesson/${id}'">
+          <span class="pill">${escapeHtml(p.Subject)}</span>
+          <h3>${escapeHtml(p.PartTitle || 'Part')}</h3>
+          <div style="color:var(--muted)">${escapeHtml(p.Description||'')}</div>
+        </div>`;
+      }).join('') +
+      `<div style="margin-top:12px"><button class="btn secondary" onclick="renderView()">◀ Back to lessons</button></div>`;
+  }
+
+  function renderLesson(id){
+    const row = App.byId.get(id);
+    if(!row){
+      $('#lessonContainer').innerHTML = `<div class='card'><h3>Not found</h3><p>The requested lesson part could not be located.</p></div>`;
+      return;
+    }
+
+    const siblings = sortParts(App.rows.filter(r=> r.Subject===row.Subject && r.Lesson===row.Lesson));
+
+    const disableIf = (url)=> (!url || !/^https?:\/\//i.test(url)) ? 'disabled' : '';
+
+    $('#lessonContainer').innerHTML = `
+      <div class="section-title"><span class="dot"></span><h2>${escapeHtml(row.Lesson)} – ${escapeHtml(row.PartTitle)}</h2></div>
+      <p style="color:var(--muted);margin:6px 0 16px">${escapeHtml(row.Description||'')}</p>
+      <div class="video">${embedVideo(row.YouTube)}</div>
+      <div class="actions">
+        <a class="btn link" ${row.Telegram?`href='${escapeAttr(row.Telegram)}' target='_blank' rel='noopener'`:''} ${disableIf(row.Telegram)}>View in Telegram</a>
+        <a class="btn secondary" ${row.Resource?`href='${escapeAttr(row.Resource)}' target='_blank' rel='noopener'`:''} ${disableIf(row.Resource)}>Resources</a>
+        <button class="btn secondary" onclick="history.back()">Back</button>
+      </div>
+
+      <div class="section-title" style="margin-top:20px"><span class="dot"></span><h3>Other parts in this lesson</h3></div>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))">
+        ${siblings.map(s=>{
+          const sid = uidFor(s);
+          const active = sid===id;
+          return `<div class="card" ${active? 'style="outline:2px solid rgba(255,255,255,.35)"' : ''} onclick="${active? '':`location.hash='#/lesson/${sid}'`}">
+            <span class="pill">${escapeHtml(s.PartTitle)}</span>
+            <div style="color:var(--muted)">${escapeHtml((s.Description||'').slice(0,80))}</div>
+          </div>`
+        }).join('')}
+      </div>
+    `;
+  }
+
+  // --- SEARCH ---
+  let fuse; // created after data load
+  function openSearch(){ $('#searchModal').classList.add('open'); $('#searchInput').focus(); }
+  function closeSearch(){ $('#searchModal').classList.remove('open'); }
+
+  const doSearch = debounce(()=>{
+    const q = $('#searchInput').value.trim();
+    const subject = $('#searchSubject').value;
+    const list = $('#searchResults');
+
+    if(!q){ list.innerHTML = '<div class="card"><p>Start typing to search…</p></div>'; return; }
+
+    let results = fuse.search(q).map(r=>r.item);
+    if(subject!=='All'){ results = results.filter(r=> r.Subject===subject); }
+
+    list.innerHTML = results.slice(0,60).map(p=>{
+      const id = uidFor(p);
+      return `<div class="row" onclick="location.hash='#/lesson/${id}'">
+        <div>
+          <div class="pill">${escapeHtml(p.Subject)} • ${escapeHtml(p.Lesson)}</div>
+          <h3 style="margin:6px 0 0">${escapeHtml(p.PartTitle)}</h3>
+          <div style="color:var(--muted)">${escapeHtml((p.Description||'').slice(0,120))}</div>
+        </div>
+        <button class="btn btn-primary">Open</button>
+      </div>`
+    }).join('') || `<div class='card'><p>No matches for “${escapeHtml(q)}”. Try another keyword.</p></div>`;
+  }, 200);
+
+  // --- SUBJECT MODAL ---
+  function openSubjectModal(){
+    const m = $('#subjectModal');
+    const box = $('#subjectButtons');
+    const subjects = ['All', ...Array.from(App.subjects)];
+    box.innerHTML = subjects.map(s=>`<div class='card' style='text-align:center;cursor:pointer' onclick='selectSubject("${escapeJs(s)}")'><h3>${escapeHtml(s)}</h3></div>`).join('');
+    m.classList.add('open');
+  }
+  function selectSubject(subject){
+    App.selectedSubject = subject;
+    $('#subjectModal').classList.remove('open');
+    renderView();
+  }
+
+  // --- ROUTER ---
+  function showRoute(name){ $$('.route').forEach(r=>r.classList.add('hide')); $(`#route-${name}`).classList.remove('hide'); }
+
+  function router(){
+    const hash = location.hash || '#/';
+    if(hash.startsWith('#/lesson/')){
+      const id = hash.split('#/lesson/')[1];
+      showRoute('lesson');
+      renderLesson(id);
+      return;
+    }
+    if(hash.startsWith('#/view-lessons')){
+      showRoute('view');
+      const url = new URL(location.href);
+      const sParam = url.hash.split('?')[1] || '';
+      const params = new URLSearchParams(sParam);
+      const subject = params.get('subject');
+      const lesson = params.get('lesson');
+      if(subject){ App.selectedSubject = decodeURIComponent(subject); }
+      renderView();
+      if(lesson){ showParts(lesson); }
+      return;
+    }
+    if(['#/about','#/support','#/contact'].includes(hash)){
+      const titles = { '#/about':'About','#/support':'Support','#/contact':'Contact' };
+      $('#genericTitle').textContent = titles[hash];
+      showRoute('generic');
+      return;
+    }
+    // default home
+    showRoute('home');
+    renderHome();
+  }
+
+  // --- HELPERS ---
+  function groupByLesson(rows){
+    return rows.reduce((acc,r)=>{ (acc[r.Lesson]=acc[r.Lesson]||[]).push(r); return acc; },{});
+  }
+  function sortParts(parts){
+    // try numeric extraction from Part Title
+    const withIndex = parts.map(p=>{
+      const m = /([Pp]art|[Ee]pisode|Ep)\s*(\d+)/.exec(p.PartTitle||'');
+      return { p, n: m? parseInt(m[2],10): Number.MAX_SAFE_INTEGER };
+    });
+    return withIndex.sort((a,b)=> a.n-b.n).map(x=>x.p);
+  }
+  function embedVideo(src){
+    const url = String(src||'').trim();
+    if(!url){ return `<div style='height:100%;display:grid;place-items:center;color:var(--muted)'>No video link provided</div>`; }
+    // accept /embed/... or watch?v=ID
+    let embed = url;
+    if(/watch\?v=/.test(url)){
+      const id = new URL(url).searchParams.get('v');
+      embed = `https://www.youtube.com/embed/${id}`;
+    }
+    return `<iframe width="100%" height="100%" src="${escapeAttr(embed)}" title="Lesson video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+  }
+  function escapeHtml(s){ return String(s??'').replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+  function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+  function escapeJs(s){ return String(s).replace(/"/g,'\\"'); }
+
+  // --- INIT ---
+  async function init(){
+    $('#year').textContent = new Date().getFullYear();
+
+    // open search
+    $('#openSearch').addEventListener('click', openSearch);
+    $('#openSearch2').addEventListener('click', openSearch);
+    $('#closeSearch').addEventListener('click', closeSearch);
+    $('#searchInput').addEventListener('input', doSearch);
+    $('#searchSubject').addEventListener('change', doSearch);
+    $('#closeSubject').addEventListener('click', ()=> $('#subjectModal').classList.remove('open'));
+
+    // load data
+    try{
+      const rows = await fetchSheet();
+      indexRows(rows);
+
+      // populate search subjects
+      const sel = $('#searchSubject');
+      Array.from(App.subjects).forEach(s=>{ const o=document.createElement('option'); o.value=o.textContent=s; sel.appendChild(o); });
+
+      // build Fuse index
+      fuse = new Fuse(App.rows, { includeScore:true, threshold:0.38, keys:['Lesson','PartTitle','Description'] });
+
+      router(); // first render
+      window.addEventListener('hashchange', router);
+    }catch(err){
+      console.error(err);
+      document.querySelector('main').innerHTML = `<div class='card'><h3>Could not load data</h3><p>Please check your Google Sheets API key, spreadsheet permissions, and tab name ("${TAB_NAME}").</p></div>`;
+    }
+  }
+
+  init();
+  </script>
+</body>
+</html>
